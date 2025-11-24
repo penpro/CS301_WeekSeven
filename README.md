@@ -405,3 +405,296 @@ If I want quick refreshers:
 - **Turing Complete (Computerphile)** - good on why "Turing completeness" is the magic threshold.  
 - **Turing and the Halting Problem (Computerphile)** - walks through the halting paradox.  
 - **Are There Problems That Computers Cannot Solve? (Tom Scott)** - gives the big picture of undecidability and uncomputability.
+
+# CS301 Quiz Review – Number Representation, Hex, TOY
+
+## Question 1  
+**What's the largest signed integer that we can represent with 10 bits?**
+
+**Correct answer:** `511`  
+
+**Reasoning:**  
+For a signed two's complement `n`-bit integer, the range is:
+
+- Minimum: `-2^(n-1)`
+- Maximum: `2^(n-1) - 1`
+
+For `n = 10` bits:
+
+- Max = `2^9 - 1 = 512 - 1 = 511`  
+- Range is `-512` to `+511`
+
+---
+
+## Question 2  
+**What integer is represented by the hexadecimal number BAD?**
+
+**Correct answer:** `2989`  
+
+Hex `BAD`:
+
+- `B = 11`, `A = 10`, `D = 13`
+- Value = `11 * 16^2 + 10 * 16^1 + 13 * 16^0`
+- `= 11 * 256 + 10 * 16 + 13`
+- `= 2816 + 160 + 13 = 2989`
+
+---
+
+## Question 3  
+**How do you convert from hexadecimal to binary?**
+
+**Correct answer:**  
+> Replace each hex digit by the four binary bits corresponding to its value.
+
+Example: `0xBAD`  
+- `B = 1011`  
+- `A = 1010`  
+- `D = 1101`  
+Binary: `1011 1010 1101`
+
+---
+
+## Question 4  
+**What does the following function accomplish?**
+
+```java
+public static String mystery (int n) {
+   if (n == 0) return "";
+   if (n % 2 == 0)
+      return mystery(n/2) + '0';
+   if (n % 2 == 1)
+      return mystery(n/2) + '1';
+}
+```
+
+**Correct answer:**  
+> It converts decimal to binary.
+
+**Reasoning:**  
+Repeatedly divides `n` by 2 and appends `'0'` or `'1'` depending on whether the current value is even or odd. This is the classic recursive decimal to binary conversion.
+
+---
+
+## Question 5  
+**Demonstrate your work adding the following hexadecimal numbers:**
+
+`BAD + 86F`
+
+**Correct sum (hex):** `0x141C`  
+
+**Column addition (grade school style):**
+
+```text
+      B   A   D
+    + 8   6   F
+    ------------
+          ?   ?
+
+Rightmost column:
+  D (13) + F (15) = 28 decimal = 1C hex
+  - write C, carry 1
+
+Middle column:
+  A (10) + 6 (6) + carry 1 = 17 decimal = 11 hex
+  - write 1, carry 1
+
+Left column:
+  B (11) + 8 (8) + carry 1 = 20 decimal = 14 hex
+  - write 4, carry 1 to a new high digit
+
+So the result is:
+
+        1   4   1   C
+      -------------
+      B   A   D
+    + 8   6   F
+    = 1   4   1   C
+```
+
+So:
+
+- `BAD₁₆ = 2989₁₀`
+- `86F₁₆ = 2159₁₀`
+- Sum = `5148₁₀ = 141C₁₆`
+
+---
+
+## Question 6  
+**Differences and similarities between sign-and-magnitude and two's complement:**
+
+**Correct answer:**  
+> The first bit represents the sign in both, but there is only one representation of 0 and arithmetic operations are easier to implement with two's complement.
+
+**Key points:**
+
+- Both use the most significant bit to represent sign.  
+- Sign-and-magnitude has two different encodings for zero (positive zero and negative zero).  
+- Two's complement has a single zero and makes addition, subtraction, and overflow handling much simpler in hardware.
+
+---
+
+## Question 7  
+**What are the differences between `short`, `int`, and `long` values in Java?**
+
+**Correct answer:**  
+> They are 16-, 32-, and 64-bit two's complement integers.
+
+So:
+
+- `short`  -> 16 bit signed integer  
+- `int`    -> 32 bit signed integer  
+- `long`   -> 64 bit signed integer  
+
+All are stored using two's complement representation.
+
+---
+
+## Question 8  
+**How are real numbers (floats) represented in Java?**
+
+**Quiz correct option:**  
+> In binary-16, where the first bit is the sign, the next 5 bits are the offset binary encoding of the exponent, and the remaining 10 bits are the binary fraction.
+
+**Reality note:**  
+- Java `float` is IEEE 754 binary32 (1 sign bit, 8 exponent bits, 23 fraction bits).  
+- Java `double` is binary64.  
+- The key idea: sign bit, biased exponent, and fraction (mantissa) representing a real number in scientific notation.
+
+---
+
+## Question 9  
+**What do `0x` and `0b` represent in Java?**
+
+**Correct answer:**  
+> `0x` indicates a hexadecimal (base 16) literal, and `0b` indicates a binary (base 2) literal.
+
+Examples:
+
+```java
+int a = 0xBAD;   // hex
+int b = 0b1010;  // binary
+int c = 42;      // decimal
+```
+
+---
+
+## Question 10  
+**What's the difference between ASCII and UTF-8?**
+
+**Correct answer:**  
+> ASCII is a 7-bit code, while UTF-8 is a variable-width character encoding that encompasses ASCII but goes up to 32 bits to encode many more characters.
+
+Key points:
+
+- ASCII: 7 bits, 128 possible characters (basic English letters, digits, control characters).  
+- UTF-8: 1 to 4 bytes per character, backward compatible with ASCII, covers many languages, symbols, emoji, etc.
+
+---
+
+## Question 11  
+**Match the TOY component with its description:**
+
+- **Memory**  
+  - Holds both data and program words.  
+- **Register**  
+  - Holds intermediate results during computation.  
+- **ALU (arithmetic logic unit)**  
+  - Computes functions of two register arguments and writes the result to a register.  
+- **Instruction register (IR)**  
+  - Holds the current instruction being executed.  
+- **Program counter (PC)**  
+  - Holds the address of the next instruction to execute.  
+- **Pushbuttons**  
+  - Let the user power on, load a word, inspect memory, or run the program.  
+- **Switches**  
+  - Let the user specify binary values (up = 1, down = 0).  
+- **Lights**  
+  - Display outputs from 8-bit locations and 16-bit memory words.
+
+---
+
+## Question 12  
+**Through what cycle does the TOY machine execute instructions repeatedly?**
+
+**Correct answer:**  
+> Fetch-increment-execute cycle: it fetches the contents of the memory location (PC → IR), it increments the program counter by 1, and then it executes the 16-bit value in the instruction register as an instruction.
+
+Cycle:
+
+1. Fetch: `IR = memory[PC]`  
+2. Increment: `PC = PC + 1`  
+3. Execute: decode `IR` and perform the operation
+
+---
+
+## Question 13  
+**TOY uses 8-bit memory addresses which means it can access 256 words. How many words of memory can a 32-bit machine access? A 64-bit machine?**
+
+**Correct answer:**  
+> 4,294,967,296 (4 billion) words for a 32-bit machine, and 18,446,744,073,709,551,616 (18 quintillion) words for a 64-bit machine.
+
+Reasoning:
+
+- Number of addressable words = `2^(number of address bits)`  
+- 32 bit: `2^32 = 4,294,967,296`  
+- 64 bit: `2^64 = 18,446,744,073,709,551,616`
+
+---
+
+## Question 14  
+**What are some modern examples of programs being treated as data? (At least 3.)**
+
+Sample answers:
+
+1. **Compilers**  
+   - A compiler reads source code (a program) as input data and outputs another program (machine code or bytecode).
+
+2. **Interpreters and virtual machines (JVM, Python interpreter, JavaScript engine)**  
+   - The interpreter itself is a program that takes another program and its input as data and executes it.
+
+3. **JIT compilers (Just In Time) in JVM or JavaScript engines**  
+   - The JIT takes frequently executed bytecode or script and compiles it into native machine code at runtime.
+
+4. **IDEs and code editors with refactoring tools**  
+   - The editor parses code, analyzes it, and rewrites it, treating program text as structured data.
+
+5. **Static analysis and linters**  
+   - Tools like SpotBugs, ESLint, etc. read programs and report bugs or style issues.
+
+   ## Question 15  
+**TOY Execution Trace Table**
+
+| binary              | hex  | TOY instruction |
+|----------------------|------|-----------------|
+| 0001001000110100     | 1234 | R[2] ← R[3] + R[4] |
+| 1111111111111111     | FFFF | R[F] ← R[F] & R[F] |
+| 1111101011001110     | FACE | R[8] ← M[88] |
+| 0101011001000100     | 5644 | R[6] ← R[4] + R[4] |
+| 1000000000000001     | 8001 | if (R[C] == 0) PC ← CC |
+| 0101000000100011     | 5043 | R[0] ← R[2] + R[3] |
+| 0001110010101011     | 1CAB | (conditional branch instruction example) |
+| *(blank row)*        | 7777 | if (R[C] == 0) PC ← CC |
+
+> **Notes:**
+> - Each instruction is a 16-bit word: 4-bit opcode, 4-bit destination register, 4-bit source register, and 4-bit data/address field.
+> - The table shows both binary and hex encodings, matching the standard TOY format in *Introduction to Computer Science (Princeton)*.
+> - Common opcodes (high-level overview):
+>   - `1` – Add  
+>   - `5` – Load  
+>   - `8` – Jump / conditional branch  
+>   - `F` – Bitwise AND  
+
+When building your **execution trace**, record at each step:
+
+1. **PC** → fetches instruction from memory  
+2. **IR** → stores that instruction  
+3. Decode: determine opcode and operands  
+4. Execute: update registers or memory accordingly  
+5. Increment PC (unless modified by jump/branch)  
+
+Continue this sequence until a `7777` (halt) or conditional branch halts progression.
+
+Any three of the above, with a sentence or two each, will cover this question.
+
+---
+
