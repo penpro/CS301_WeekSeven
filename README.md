@@ -406,295 +406,294 @@ If I want quick refreshers:
 - **Turing and the Halting Problem (Computerphile)** - walks through the halting paradox.  
 - **Are There Problems That Computers Cannot Solve? (Tom Scott)** - gives the big picture of undecidability and uncomputability.
 
-# CS301 Quiz Review – Number Representation, Hex, TOY
+"""# CS-301 – Computability & Complexity Quiz Notes
 
-## Question 1  
-**What's the largest signed integer that we can represent with 10 bits?**
-
-**Correct answer:** `511`  
-
-**Reasoning:**  
-For a signed two's complement `n`-bit integer, the range is:
-
-- Minimum: `-2^(n-1)`
-- Maximum: `2^(n-1) - 1`
-
-For `n = 10` bits:
-
-- Max = `2^9 - 1 = 512 - 1 = 511`  
-- Range is `-512` to `+511`
+These are reference notes for the quiz questions you saw on decidability, computability, and complexity.
 
 ---
 
-## Question 2  
-**What integer is represented by the hexadecimal number BAD?**
-
-**Correct answer:** `2989`  
-
-Hex `BAD`:
-
-- `B = 11`, `A = 10`, `D = 13`
-- Value = `11 * 16^2 + 10 * 16^1 + 13 * 16^0`
-- `= 11 * 256 + 10 * 16 + 13`
-- `= 2816 + 160 + 13 = 2989`
-
----
-
-## Question 3  
-**How do you convert from hexadecimal to binary?**
+## Q1. What does decidability refer to in computer science?
 
 **Correct answer:**  
-> Replace each hex digit by the four binary bits corresponding to its value.
+> A Turing machine decides a language if it always gives the correct answer and halts on every input (doesn't go into an infinite loop).
 
-Example: `0xBAD`  
-- `B = 1011`  
-- `A = 1010`  
-- `D = 1101`  
-Binary: `1011 1010 1101`
+**Notes:**
+
+- *Decidable problem* = there exists an algorithm that:
+  - Takes any valid input from the problem domain.
+  - Halts on every input.
+  - Answers yes or no correctly.
+- Decidable is stronger than just “recognizable” - recognizable machines are allowed to loop forever on some inputs, but deciders are not.
 
 ---
 
-## Question 4  
-**What does the following function accomplish?**
-
-```java
-public static String mystery (int n) {
-   if (n == 0) return "";
-   if (n % 2 == 0)
-      return mystery(n/2) + '0';
-   if (n % 2 == 1)
-      return mystery(n/2) + '1';
-}
-```
+## Q2. What does computability refer to in computer science?
 
 **Correct answer:**  
-> It converts decimal to binary.
+> A function f(x) is computable if there exists some Turing Machine such that when its tape is initialized to x, it leaves the string f(x) on the tape.
 
-**Reasoning:**  
-Repeatedly divides `n` by 2 and appends `'0'` or `'1'` depending on whether the current value is even or odd. This is the classic recursive decimal to binary conversion.
+**Notes:**
 
----
-
-## Question 5  
-**Demonstrate your work adding the following hexadecimal numbers:**
-
-`BAD + 86F`
-
-**Correct sum (hex):** `0x141C`  
-
-**Column addition (grade school style):**
-
-```text
-      B   A   D
-    + 8   6   F
-    ------------
-          ?   ?
-
-Rightmost column:
-  D (13) + F (15) = 28 decimal = 1C hex
-  - write C, carry 1
-
-Middle column:
-  A (10) + 6 (6) + carry 1 = 17 decimal = 11 hex
-  - write 1, carry 1
-
-Left column:
-  B (11) + 8 (8) + carry 1 = 20 decimal = 14 hex
-  - write 4, carry 1 to a new high digit
-
-So the result is:
-
-        1   4   1   C
-      -------------
-      B   A   D
-    + 8   6   F
-    = 1   4   1   C
-```
-
-So:
-
-- `BAD₁₆ = 2989₁₀`
-- `86F₁₆ = 2159₁₀`
-- Sum = `5148₁₀ = 141C₁₆`
+- A function is *computable* if there is some Turing machine that:
+  - Halts on every possible input x.
+  - Outputs f(x) when given x.
+- This is like “decidable,” but framed for functions instead of yes/no languages.
+- Intuition: if you can write a correct program that always finishes and produces the right output, the function is computable.
 
 ---
 
-## Question 6  
-**Differences and similarities between sign-and-magnitude and two's complement:**
+## Q3. Turing machine and what term are interchangeable?
+
+**Question:**  
+In the theory of computing, the terms Turing machine and ____ can be used interchangeably; there may be many Turing machines for each specified task, just as we often consider ________________________________.
 
 **Correct answer:**  
-> The first bit represents the sign in both, but there is only one representation of 0 and arithmetic operations are easier to implement with two's complement.
+> algorithm; multiple algorithms to solve a programming problem
 
-**Key points:**
+**Notes:**
 
-- Both use the most significant bit to represent sign.  
-- Sign-and-magnitude has two different encodings for zero (positive zero and negative zero).  
-- Two's complement has a single zero and makes addition, subtraction, and overflow handling much simpler in hardware.
+- We often treat “Turing machine” and “algorithm” as the same idea:
+  - An algorithm is an abstract procedure.
+  - A Turing machine is a formal model that captures what an algorithm can do.
+- Just like you can have many algorithms for sorting, you can have many Turing machines that solve the same task.
 
 ---
 
-## Question 7  
-**What are the differences between `short`, `int`, and `long` values in Java?**
+## Q4. What is a universal Turing machine?
 
 **Correct answer:**  
-> They are 16-, 32-, and 64-bit two's complement integers.
+> A Turing machine that can simulate the operation of any Turing machine on any given input.
 
-So:
+**Notes:**
 
-- `short`  -> 16 bit signed integer  
-- `int`    -> 32 bit signed integer  
-- `long`   -> 64 bit signed integer  
-
-All are stored using two's complement representation.
-
----
-
-## Question 8  
-**How are real numbers (floats) represented in Java?**
-
-**Quiz correct option:**  
-> In binary-16, where the first bit is the sign, the next 5 bits are the offset binary encoding of the exponent, and the remaining 10 bits are the binary fraction.
-
-**Reality note:**  
-- Java `float` is IEEE 754 binary32 (1 sign bit, 8 exponent bits, 23 fraction bits).  
-- Java `double` is binary64.  
-- The key idea: sign bit, biased exponent, and fraction (mantissa) representing a real number in scientific notation.
+- A universal Turing machine (UTM) is a single machine that:
+  - Takes as input a description of another Turing machine M plus an input x.
+  - Simulates “M running on x”.
+- This is the theoretical ancestor of modern general-purpose computers.
 
 ---
 
-## Question 9  
-**What do `0x` and `0b` represent in Java?**
+## Q5. What feature do modern computers share with universal Turing machines?
 
 **Correct answer:**  
-> `0x` indicates a hexadecimal (base 16) literal, and `0b` indicates a binary (base 2) literal.
+> They both use the von Neumann architecture: where computer programs and data are stored in the same main memory.
 
-Examples:
+**Notes:**
 
-```java
-int a = 0xBAD;   // hex
-int b = 0b1010;  // binary
-int c = 42;      // decimal
-```
+- In von Neumann architecture:
+  - Instructions (programs) and data sit in the same memory.
+  - The machine can treat programs as data and vice versa.
+- This is exactly what UTMs do - they read the description of another machine as input.
 
 ---
 
-## Question 10  
-**What's the difference between ASCII and UTF-8?**
+## Q6. What is the Church–Turing Thesis?
 
 **Correct answer:**  
-> ASCII is a 7-bit code, while UTF-8 is a variable-width character encoding that encompasses ASCII but goes up to 32 bits to encode many more characters.
+> A universal Turing Machine can perform any computation that can be described by any physically realizable computing device.
 
-Key points:
+**Notes:**
 
-- ASCII: 7 bits, 128 possible characters (basic English letters, digits, control characters).  
-- UTF-8: 1 to 4 bytes per character, backward compatible with ASCII, covers many languages, symbols, emoji, etc.
-
----
-
-## Question 11  
-**Match the TOY component with its description:**
-
-- **Memory**  
-  - Holds both data and program words.  
-- **Register**  
-  - Holds intermediate results during computation.  
-- **ALU (arithmetic logic unit)**  
-  - Computes functions of two register arguments and writes the result to a register.  
-- **Instruction register (IR)**  
-  - Holds the current instruction being executed.  
-- **Program counter (PC)**  
-  - Holds the address of the next instruction to execute.  
-- **Pushbuttons**  
-  - Let the user power on, load a word, inspect memory, or run the program.  
-- **Switches**  
-  - Let the user specify binary values (up = 1, down = 0).  
-- **Lights**  
-  - Display outputs from 8-bit locations and 16-bit memory words.
+- Informal statement: “Whatever can be effectively computed can be computed by a Turing machine.”
+- It is not a theorem - it cannot be proved, it is a belief backed by lots of evidence.
+- All reasonable models of computation invented so far (lambda calculus, register machines, real computers) are equivalent in power to Turing machines.
 
 ---
 
-## Question 12  
-**Through what cycle does the TOY machine execute instructions repeatedly?**
+## Q7. Examples of universal models of computation (select all that apply)
+
+**Correct choices:**
+
+- ✅ Lambda calculus  
+- ❌ Finite automata  
+- ✅ Cellular automata (with a universal rule set, like rule 110 or Conway’s Life)  
+- ✅ Your computer  
+- ✅ Most programming languages  
+- ❌ Regular expressions (in the formal language sense, not the extended versions in some languages)
+
+**Notes:**
+
+- *Turing complete / universal* means:
+  - Can compute any function a Turing machine can compute.
+- Finite automata and classical regular expressions are weaker:
+  - They can only recognize regular languages, not all computable languages.
+- Most real programming languages are Turing complete because they support:
+  - Unbounded loops and recursion.
+  - Unbounded memory usage in principle.
+
+---
+
+## Q8. What does unsolvability refer to?
 
 **Correct answer:**  
-> Fetch-increment-execute cycle: it fetches the contents of the memory location (PC → IR), it increments the program counter by 1, and then it executes the 16-bit value in the instruction register as an instruction.
+> Problems where there is no algorithm (or Turing machine) to solve the problem.
 
-Cycle:
+**Notes:**
 
-1. Fetch: `IR = memory[PC]`  
-2. Increment: `PC = PC + 1`  
-3. Execute: decode `IR` and perform the operation
+- An *unsolvable* (or *undecidable*) problem:
+  - Has no algorithm that always halts and gives a correct yes or no answer on every input.
+- This is about theoretical impossibility, not “computers are too slow right now.”
 
 ---
 
-## Question 13  
-**TOY uses 8-bit memory addresses which means it can access 256 words. How many words of memory can a 32-bit machine access? A 64-bit machine?**
+## Q9. What is the halting problem?
+
+**Correct summary (you had this right):**
+
+1. Problem statement:  
+   > Given a program and its input, determine whether that program will halt (not enter an infinite loop) when run on that input.
+
+2. Answer:  
+   > It is unsolvable.
+
+**Notes:**
+
+- Alan Turing proved that there is no algorithm that solves the halting problem for all programs and inputs.
+- Many other undecidable problems are proved by reducing from the halting problem.
+
+---
+
+## Q10. Why is it important to understand unsolvability?
 
 **Correct answer:**  
-> 4,294,967,296 (4 billion) words for a 32-bit machine, and 18,446,744,073,709,551,616 (18 quintillion) words for a 64-bit machine.
+> So they don’t waste time trying to solve problems that cannot be solved by any algorithm.
 
-Reasoning:
+**Notes:**
 
-- Number of addressable words = `2^(number of address bits)`  
-- 32 bit: `2^32 = 4,294,967,296`  
-- 64 bit: `2^64 = 18,446,744,073,709,551,616`
+- If a problem is fundamentally unsolvable:
+  - No hardware upgrade will fix it.
+  - No clever algorithm can exist.
+- Knowing this saves time - you can switch to approximate, heuristic, or restricted versions instead of chasing an impossible exact solution.
 
 ---
 
-## Question 14  
-**What are some modern examples of programs being treated as data? (At least 3.)**
+## Q11. Examples of unsolvable problems (select all that apply)
 
-Sample answers:
+**Correct choices:**
 
-1. **Compilers**  
-   - A compiler reads source code (a program) as input data and outputs another program (machine code or bytecode).
+- ✅ Totality problem (does a given program enter into an infinite loop for any input?)  
+- ✅ Program equivalence problem (do two programs compute the same result?)  
+- ✅ Functional property (does a program have any nontrivial semantic property?)  
+- ✅ Memory management (will a given variable ever be referenced again?)  
+- ✅ Virus recognition (is a given program a virus?)  
+- ❌ Shortest path problem (this is solvable in polynomial time)  
+- ❌ Duplicate detection problem (also solvable - just use sorting or a set)  
+- ❌ Parity problem (trivial - just check n mod 2)
 
-2. **Interpreters and virtual machines (JVM, Python interpreter, JavaScript engine)**  
-   - The interpreter itself is a program that takes another program and its input as data and executes it.
+**Notes:**
 
-3. **JIT compilers (Just In Time) in JVM or JavaScript engines**  
-   - The JIT takes frequently executed bytecode or script and compiles it into native machine code at runtime.
+- Rice’s theorem: For any nontrivial semantic property of programs, the problem “does program P have property X?” is undecidable.
+  - Program equivalence is one such property.
+  - “Will this variable ever be used again?” is another.
+  - “Is this program a virus?” is another.
+- Totality problem (halts on all inputs) is undecidable too.
+- Shortest path, duplicate detection, parity are all classic *solvable* problems.
 
-4. **IDEs and code editors with refactoring tools**  
-   - The editor parses code, analyzes it, and rewrites it, treating program text as structured data.
+---
 
-5. **Static analysis and linters**  
-   - Tools like SpotBugs, ESLint, etc. read programs and report bugs or style issues.
+## Q12. Why is worst-case analysis useful?
 
-   ## Question 15  
-**TOY Execution Trace Table**
+**Correct answer:**  
+> Because it is often easier to reason about upper bounds on running time and is practical in situations where performance guarantees are required.
 
-| binary              | hex  | TOY instruction |
-|----------------------|------|-----------------|
-| 0001001000110100     | 1234 | R[2] ← R[3] + R[4] |
-| 1111111111111111     | FFFF | R[F] ← R[F] & R[F] |
-| 1111101011001110     | FACE | R[8] ← M[88] |
-| 0101011001000100     | 5644 | R[6] ← R[4] + R[4] |
-| 1000000000000001     | 8001 | if (R[C] == 0) PC ← CC |
-| 0101000000100011     | 5043 | R[0] ← R[2] + R[3] |
-| 0001110010101011     | 1CAB | (conditional branch instruction example) |
-| *(blank row)*        | 7777 | if (R[C] == 0) PC ← CC |
+**Notes:**
 
-> **Notes:**
-> - Each instruction is a 16-bit word: 4-bit opcode, 4-bit destination register, 4-bit source register, and 4-bit data/address field.
-> - The table shows both binary and hex encodings, matching the standard TOY format in *Introduction to Computer Science (Princeton)*.
-> - Common opcodes (high-level overview):
->   - `1` – Add  
->   - `5` – Load  
->   - `8` – Jump / conditional branch  
->   - `F` – Bitwise AND  
+- Worst case gives a guaranteed upper bound:
+  - “This algorithm will never take longer than c · n² steps.”
+- Useful when:
+  - You need guarantees (real-time systems, SLAs, etc.).
+  - Average or typical case is hard to model.
 
-When building your **execution trace**, record at each step:
+---
 
-1. **PC** → fetches instruction from memory  
-2. **IR** → stores that instruction  
-3. Decode: determine opcode and operands  
-4. Execute: update registers or memory accordingly  
-5. Increment PC (unless modified by jump/branch)  
+## Q13. Easy vs difficult problems in algorithm analysis
 
-Continue this sequence until a `7777` (halt) or conditional branch halts progression.
+**Correct answer:**  
+> Difficult problems often require trying all possibilities to solve them, leading to exponential running time, while easy problems do not.
 
-Any three of the above, with a sentence or two each, will cover this question.
+**Notes:**
+
+- Rough rule of thumb:
+  - *Easy* problems - can be solved in polynomial time (like n, n log n, n²).
+  - *Difficult* or *intractable* problems - best known algorithms are exponential (like 2ⁿ, n!).
+- Exponential-time algorithms blow up quickly and become impractical even for moderate input sizes.
+
+---
+
+## Q14. What is NP in computer science?
+
+**Correct answer:**  
+> The set of all decision problems that can be solved in polynomial time on a nondeterministic Turing machine.
+
+**Notes:**
+
+- Equivalent definition that is often used:
+  - NP = problems where “yes” answers can be verified in polynomial time by a deterministic machine, given a certificate or witness.
+- “Nondeterministic Turing machine” is a mathematical tool - it is not something you can build, but it makes complexity classes easier to define.
+
+---
+
+## Q15. What is P in computer science?
+
+**Correct answer:**  
+> The set of all search problems that can be solved in polynomial time (essentially, all search problems that have algorithmic solutions that are guaranteed to finish in a feasible amount of time).
+
+**Notes:**
+
+- More standard phrasing:  
+  - P = set of all decision problems solvable in polynomial time on a deterministic Turing machine.
+- Intuition:
+  - If a problem is in P, then there is an algorithm that always finishes “fast” (polynomial time) on every input.
+
+---
+
+## Q16. What does it mean for a problem to be intractable?
+
+**Correct answer:**  
+> A problem is intractable if there exists no polynomial-time algorithm to solve it.
+
+**Notes:**
+
+- In practice, “intractable” usually means:
+  - All known algorithms are exponential or worse.
+  - No polynomial-time algorithm is known and we suspect none exists.
+- In the P vs NP context:
+  - If P ≠ NP, then NP-complete problems are intractable.
+
+---
+
+## Q17. Examples of NP-complete problems (give any 3)
+
+Some standard NP-complete problems:
+
+- Boolean satisfiability (SAT) - given a Boolean formula, is there an assignment of true or false values that makes it true?
+- 3-SAT - SAT where each clause has exactly 3 literals.
+- Traveling salesperson problem (TSP, decision version) - given distances and a budget B, is there a tour visiting each city once with total cost at most B?
+- Hamiltonian cycle problem - does a graph contain a cycle that visits each vertex exactly once?
+- Clique problem - does a graph contain a clique of size at least k?
+- Vertex cover problem - does a graph contain a vertex cover of size at most k?
+
+**Any three distinct ones from this list are good answers.**
+
+---
+
+## Q18. The two possible universes from the chapter
+
+**Correct answer:**  
+> NP-complete problems are intractable (P≠NP) OR all search problems are tractable (P=NP)
+
+**Notes:**
+
+- These are the two big possibilities:
+  1. **P ≠ NP** - what most computer scientists believe:
+     - NP-complete problems are truly difficult.
+     - No polynomial-time algorithm exists for them.
+  2. **P = NP** - wild alternate universe:
+     - Every problem whose solution can be verified quickly can also be solved quickly.
+     - Most search problems would become tractable.
+- We do not know which universe we are in. This is the famous P vs NP question.
+"""
+
 
 ---
 
